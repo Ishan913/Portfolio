@@ -7,14 +7,9 @@ document.body.appendChild(renderer.domElement);
 const width = window.innerWidth;
 const height = window.innerHeight;
 
-
-// const geometry = new THREE.BoxGeometry(100, 100, 100);
-// const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-// const cube = new THREE.Mesh(geometry, material);
-// cube.position.set(-width * 2, 0, 0)
-// console.log(cube)
-// scene.add(cube);
-
+let scene1=[]
+let scene2=[]
+let scene1Active=1;
 
 const loader = new THREE.FontLoader();
 loader.load('Akaya.json', function (tex) {
@@ -41,6 +36,8 @@ loader.load('Akaya.json', function (tex) {
 
         scene.add(texx)
         scene.add(texx2)
+        scene1.push(texx)
+        scene1.push(texx2)
     }
 });
 
@@ -57,11 +54,13 @@ for (let i = 0; i < 5; i++) {
     mesh2.position.set(-width * 3, height * 3 / 2, -width * (1 + i))
     mesh2.rotation.set(0, Math.PI / 2, 0)
     scene.add(mesh2)
+    scene1.push(mesh2)
 
     const mesh3 = new THREE.Mesh(geometry2, material2);
     mesh3.position.set(width * 3, height * 3 / 2, -width * (1 + i))
     mesh3.rotation.set(0, -Math.PI / 2, 0)
     scene.add(mesh3)
+    scene1.push(mesh3)
 }
 
 let material3 = new THREE.MeshLambertMaterial({
@@ -78,23 +77,35 @@ var light = new THREE.AmbientLight(0xffffff)
 scene.add(light)
 
 camera.position.set(0, 1000, 500)
-// camera.position.set(0, -2500, 1000)
-// camera.lookAt(0, 0, 0)
 
 window.addEventListener("wheel", function (e) {
-    if (e.deltaY < 0) {
-        for (let i = 0; i < -e.deltaY; i++) {
-            if (camera.position.z > -width * 10/3) {
+    if (e.deltaY > 0) {
+        for (let i = 0; i < e.deltaY; i++) {
+            if ( camera.position.z > -width * 10/3) {
                 camera.position.z -= 10;
-                // }
+            }else{
+                if (scene1Active==1){
+                    scene1Active=0;
+                    for (let obj of scene1){
+                        obj.visible=false;
+                    }
+                }
+                camera.position.y-=10
             }
         }
     } else {
-        // if (camera.position.z < 500) {
-        for (let i = 0; i < e.deltaY; i++) {
-            if (camera.position.z < 2000) {
+        for (let i = 0; i < -e.deltaY; i++) {
+            if (camera.position.y<1000){
+                camera.position.y += 10;
+            }
+            else if (camera.position.z < 2000) {
+                if (scene1Active==0){
+                    scene1Active=1;
+                    for (let obj of scene1){
+                        obj.visible=true;
+                    }
+                }
                 camera.position.z += 10;
-                // }
             }
         }
     }
