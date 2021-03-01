@@ -1,5 +1,5 @@
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 20000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -7,9 +7,11 @@ document.body.appendChild(renderer.domElement);
 const width = window.innerWidth;
 const height = window.innerHeight;
 
-let scene1=[]
-let scene2=[]
-let scene1Active=1;
+let scene1 = []
+let scene2 = []
+let scene1Active = 1;
+
+
 
 const loader = new THREE.FontLoader();
 loader.load('Akaya.json', function (tex) {
@@ -42,7 +44,6 @@ loader.load('Akaya.json', function (tex) {
 });
 
 
-
 const TextureLoader = new THREE.TextureLoader();
 let material2 = new THREE.MeshLambertMaterial({
     map: TextureLoader.load('src/bb.jpg')
@@ -63,15 +64,41 @@ for (let i = 0; i < 5; i++) {
     scene1.push(mesh3)
 }
 
-let material3 = new THREE.MeshLambertMaterial({
-    map: TextureLoader.load('src/back.png')
-});
-const geometry3 = new THREE.PlaneGeometry(width, width);
-const mesh3 = new THREE.Mesh(geometry3, material3);
-mesh3.position.set(0, height * 3 / 2, -width * 9/2)
-// mesh2.rotation.set(0, Math.PI / 2, 0)
-scene.add(mesh3)
 
+// for (var i = 0; i < 400; i++) {
+//     var b = new THREE.Mesh(
+//       new THREE.BoxGeometry(10,10,10),
+//       new THREE.MeshBasicMaterial({color: "#EEEDDD"})
+//     );
+
+//     b.position.x = -300 + Math.random() * 600;
+//     b.position.y = -300 + Math.random() * 600;  
+//     b.position.z = -300 + Math.random() * 600;
+
+//     scene.add(b);
+//     console.log("Added cube");
+//   }
+
+
+
+const loader3d = new THREE.GLTFLoader();
+let spaceship;
+loader3d.load('src/s1/1352 Flying Saucer.gltf', function (gltf) {
+    saucer = gltf.scene.children[0];
+    spaceship=saucer;
+    saucer.position.set(0, 0, -width * 20/3)
+    saucer.rotation.x=Math.PI/16
+    saucer.rotation.y=Math.PI/16
+    saucer.rotation.z=-Math.PI/16
+    saucer.scale.set(50, 50, 50);
+    scene.add(gltf.scene);
+    animate();
+
+}, undefined, function (error) {
+
+    console.error(error);
+
+});
 
 var light = new THREE.AmbientLight(0xffffff)
 scene.add(light)
@@ -81,28 +108,28 @@ camera.position.set(0, 1000, 500)
 window.addEventListener("wheel", function (e) {
     if (e.deltaY > 0) {
         for (let i = 0; i < e.deltaY; i++) {
-            if ( camera.position.z > -width * 10/3) {
+            if (camera.position.z > -width * 10 / 3) {
                 camera.position.z -= 10;
-            }else{
-                if (scene1Active==1){
-                    scene1Active=0;
-                    for (let obj of scene1){
-                        obj.visible=false;
+            } else {
+                if (scene1Active == 1) {
+                    scene1Active = 0;
+                    for (let obj of scene1) {
+                        obj.visible = false;
                     }
                 }
-                camera.position.y-=10
+                camera.position.y -= 10
             }
         }
     } else {
         for (let i = 0; i < -e.deltaY; i++) {
-            if (camera.position.y<1000){
+            if (camera.position.y < 1000) {
                 camera.position.y += 10;
             }
             else if (camera.position.z < 2000) {
-                if (scene1Active==0){
-                    scene1Active=1;
-                    for (let obj of scene1){
-                        obj.visible=true;
+                if (scene1Active == 0) {
+                    scene1Active = 1;
+                    for (let obj of scene1) {
+                        obj.visible = true;
                     }
                 }
                 camera.position.z += 10;
@@ -117,7 +144,7 @@ const animate = function () {
     // cube.rotation.x += 0.1;
     // cube.rotation.y += 0.01;
     // cube.rotation.z += 0.01
-
+    spaceship.rotation.y+=0.1
     renderer.render(scene, camera);
 };
 
