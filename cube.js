@@ -5,8 +5,10 @@ const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-const width = canvas.clientWidth;
-const height = canvas.clientHeight;
+// const width = canvas.clientWidth;
+// const height = canvas.clientHeight;
+const width = 1536;
+const height = 754;
 
 let scene1 = []
 let scene2 = []
