@@ -20,6 +20,8 @@ let labelContainerElem;
 let elem;
 let handshake;
 let buttons = [];
+let rayCaster;
+let mouse;
 
 init()
 
@@ -31,7 +33,9 @@ function init() {
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
-
+    document.addEventListener( 'click',  onDocumentMouseDown, false);
+    rayCaster = new THREE.Raycaster();
+    mouse = new THREE.Vector2();
     htmlInit()
     setText()
     setSideImage()
@@ -41,6 +45,40 @@ function init() {
     addButtons()
     showInfo()
 
+    buttons[2].callback= function() {
+        for (let obj of scene3) {
+            obj.visible = true;
+        }
+        for (let obj of scene4) {
+            obj.visible = false;
+        }
+        for (let obj of scene5) {
+            obj.visible = false;
+        }
+    }
+    buttons[1].callback= function() {
+        for (let obj of scene3) {
+            obj.visible = false;
+        }
+        for (let obj of scene4) {
+            obj.visible = true;
+        }
+        for (let obj of scene5) {
+            obj.visible = false;
+        }
+    }
+    buttons[0].callback= function() {
+        for (let obj of scene3) {
+            obj.visible = false;
+        }
+        for (let obj of scene4) {
+            obj.visible = false;
+        }
+        for (let obj of scene5) {
+            obj.visible = true;
+        }
+    }
+    console.log(buttons)
     var light2 = new THREE.AmbientLight(0xffffff)
     scene.add(light2)
 
@@ -94,6 +132,21 @@ class Loop {
 }
 let loop = new Loop(camera, scene, renderer);
 
+function onDocumentMouseDown( event ) {
+    event.preventDefault();
+
+    mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
+    mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+
+    rayCaster.setFromCamera( mouse, camera );
+
+    var intersects = rayCaster.intersectObjects( scene.children ); 
+
+    if ( intersects.length > 0 ) {
+        intersects[0].object.callback();
+    }
+
+}
 
 function setText() {
     const loader = new THREE.FontLoader();
@@ -421,7 +474,29 @@ function showInfo() {
     scene.add(mesh4)
     scene4.push(mesh4)
 
-    
+    let material5 = new THREE.MeshLambertMaterial({
+        map: TextureLoader.load('src/imgs/Asset 10.png')
+    });
+    const mesh5 = new THREE.Mesh(geometry, material5);
+    mesh5.position.set(width*0, -width * 10/5, -width * 5)
+    scene.add(mesh5)
+    scene5.push(mesh5)
+
+    let material6 = new THREE.MeshLambertMaterial({
+        map: TextureLoader.load('src/imgs/Asset 12.png')
+    });
+    const mesh6 = new THREE.Mesh(geometry, material6);
+    mesh6.position.set(width*4/5, -width * 10/5, -width * 5)
+    scene.add(mesh6)
+    scene5.push(mesh6)
+
+    let material7 = new THREE.MeshLambertMaterial({
+        map: TextureLoader.load('src/imgs/Asset 11.png')
+    });
+    const mesh7 = new THREE.Mesh(geometry, material7);
+    mesh7.position.set(width*8/5, -width * 10/5, -width * 5)
+    scene.add(mesh7)
+    scene5.push(mesh7)    
 
 }
 
@@ -488,6 +563,12 @@ const animate = function () {
             obj.visible = false;
         }
         for (let obj of scene3) {
+            obj.visible = false;
+        }
+        for (let obj of scene4) {
+            obj.visible = false;
+        }
+        for (let obj of scene5) {
             obj.visible = false;
         }
     } else {
