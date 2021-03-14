@@ -366,7 +366,8 @@ function addCollision() {
         console.log("done")
         animate();
         const light = new THREE.PointLight(0xffffff, 1, width * 10);
-        light.position.set(-width * 3, -width * 5, -width * 3);
+        // light.position.set(-width * 3, -width * 5, -width * 3);
+        light.position.set(-width * 4, -width * 5, -width * 10);
         scene.add(light);
 
 
@@ -479,7 +480,7 @@ function addButtons() {
 function showInfo() {
     const loader = new THREE.FontLoader(manager);
     loader.load('Raleway_Regular.json', function (tex) {
-        const textAM = new THREE.TextGeometry("I am an undergrad currently pursuing Computer\nScience and Design from IIIT Delhi. I first learned \nhow to program back in my early college days.\nI am very passionate about programming and \nengineering as a whole and it's combination with \nux design as well.I thrive in environments that \nallow me to develop my skillset on a continuous \nbasis.I have a very keen eye for aesthetics and \nvery much enjoy design overall.", {
+        const textAM = new THREE.TextGeometry("I am an undergrad currently pursuing Computer\nScience and Design from IIIT Delhi. I first learned \nhow to program back in my early college days.\nI am very passionate about programming and \nengineering as a whole and it's combination with \nux design as well. I thrive in environments that \nallow me to develop my skillset on a continuous \nbasis. I have a very keen eye for aesthetics and \nvery much enjoy design overall.", {
             size: width / 14,
             height: 0,
             curveSegments: 12,
@@ -714,7 +715,7 @@ const animate = function () {
     // labelPosition()
 
     for (let tt of texts) {
-        tt.position.z -= width / 10
+        tt.position.z -= width / 20
         if (tt.position.z < -7 * width * 3 / 5) {
             tt.position.z = width * 3 / 5
         }
